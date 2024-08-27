@@ -240,7 +240,7 @@ const NewProject = () => {
                 </div>
               </SplitPane>
             </SplitPane>
-            <div className="flex-1 bg-white">
+            <div className="bg-white">
               <iframe
                 title="Result"
                 srcDoc={output}
