@@ -144,9 +144,9 @@ const ProjectCard = ({project,index,onDelete}) => {
           <p className=' text-white text-lg capitalize'>{project.title}</p>
           <p className=' text-primaryText text-sm capitalize'>
             {
-              project?.user[0].displayName
-              ? project?.user[0].displayName
-              : `${project?.user?.email?.split('@')[0]}`
+              project?.user[0]?.displayName
+              ? project?.user[0]?.displayName
+              : `${project?.user[0]?.email?.split('@')[0]}`
             }
           </p>
         </div>
