@@ -75,6 +75,8 @@ const NewProject = () => {
         </body>
       </html>
     `;
+    console.log(combinedOutput);
+    
     setOutput(combinedOutput);
   };
 
