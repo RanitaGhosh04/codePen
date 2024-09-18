@@ -4,16 +4,19 @@ import { FcSettings } from "react-icons/fc";
 import { SplitPane } from "react-collapse-pane";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Logo } from "../assets";
 import { AnimatePresence, motion } from "framer-motion";
 import { MdCheck, MdEdit } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Alert, UserProfileDetails } from "../components";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc,getDoc } from "firebase/firestore";
 import { db } from "../config/firebase.config";
 
 const NewProject = () => {
+  const { id } = useParams(); // Get the project ID from the URL
+  const projects = useSelector((state) => state.projects.projects);
+  const [project, setProject] = useState(null);
   const [alert, setAlert] = useState(false);
   const [html, setHtml] = useState("");
   const [css, setCss] = useState("");
@@ -22,6 +25,39 @@ const NewProject = () => {
   const [title, setTitle] = useState("Untitled");
   const user = useSelector((state) => state.user.user);
   const [output, setOutput] = useState("");
+
+  useEffect(() => {
+    if (id) {
+      const projectData = projects.find((proj) => proj.id === id);
+      if (projectData) {
+        setProject(projectData);
+        setHtml(projectData.html);
+        setCss(projectData.css);
+        setJs(projectData.js);
+        setTitle(projectData.title);
+        // Optionally set output based on existing project data
+        updateOutput(projectData.html, projectData.css, projectData.js);
+      } else {
+        // Fetch from Firestore if not found in Redux store
+        const fetchProject = async () => {
+          const docRef = doc(db, "Projects", id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const fetchedProject = docSnap.data();
+            setProject(fetchedProject);
+            setHtml(fetchedProject.html);
+            setCss(fetchedProject.css);
+            setJs(fetchedProject.js);
+            setTitle(fetchedProject.title);
+            updateOutput(fetchedProject.html, fetchedProject.css, fetchedProject.js);
+          } else {
+            console.log("No such document!");
+          }
+        };
+        fetchProject();
+      }
+    }
+  }, [id, projects]);
 
   useEffect(() => {
     updateOutput();
@@ -43,9 +79,9 @@ const NewProject = () => {
   };
 
   const saveProgram = async () => {
-    const id = `${Date.now()}`;
+    const projectId = id || `${Date.now()}`;
     const _doc = {
-      id,
+      id : projectId,
       title,
       html,
       css,
@@ -54,7 +90,7 @@ const NewProject = () => {
       user,
     };
 
-    await setDoc(doc(db, "Projects", id), _doc)
+    await setDoc(doc(db, "Projects", projectId), _doc)
       .then(() => {
         setAlert(true);
       })
@@ -240,7 +276,10 @@ const NewProject = () => {
                 </div>
               </SplitPane>
             </SplitPane>
-            <div className="bg-white">
+            <div className="bg-white"
+            style={{ overflow: "hidden", height: "100%" }}
+            >
+
               <iframe
                 title="Result"
                 srcDoc={output}

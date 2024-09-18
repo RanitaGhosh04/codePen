@@ -20,7 +20,7 @@ const UserProfileDetails = () => {
   // for user photo or letter
   const user = useSelector((state)=>state.user?.user)
 
-  const userEmailFirstChar = user[0]?.email ? user[0].email.charAt(0) : '';
+  const userEmailFirstChar = user[0]?.email ? user[0]?.email?.charAt(0) : '';
   console.log(user[0]?.email);
 
   // const handleSignOut = () => {

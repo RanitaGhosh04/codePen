@@ -87,11 +87,14 @@ const App = () => {
         {/* Initial route */}
         <Route path='/home/*' element={<Home/>}/>
 
+        <Route path="/newproject/:id" element={<NewProject/>} />
+
         {/* load newproject vomponent for the following route */}
         <Route path="/newproject" element={<NewProject/>}/>
 
         {/* navigate to home */}
         <Route path="*" element={<Navigate to={'/home'}/>} />
+
       </Routes>
     </div>
     }</>

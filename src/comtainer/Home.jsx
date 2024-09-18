@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {HiChevronDoubleLeft} from 'react-icons/hi2'
 import {motion} from 'framer-motion'
 import {Logo} from '../assets'
-import { Link, Route, Routes} from 'react-router-dom'
+import { Link, Route, Routes, useNavigate} from 'react-router-dom'
 import {MdHome} from 'react-icons/md'
 import {FaSearchengin} from 'react-icons/fa6'
 import {Projects,SignUp} from '../comtainer'
@@ -31,6 +31,15 @@ const Home = () => {
 
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleStartCodingClick = () => {
+    if (user) {
+      navigate('/newproject'); // Navigate to new project
+    } else {
+      alert('Please log in or sign up to start coding!'); // Show alert if user is not logged in
+    }
+  };
 
   
   console.log(user);
@@ -59,11 +68,13 @@ const Home = () => {
 
 
       {/* start coding */}
-      <Link to={'/newproject'}>
-      <div className=' px-6 py-3 flex items-center justify-center rounded-xl border border-gray-400 cursor-pointer group hover:border-gray-200'>
+      
+      <div
+       onClick={handleStartCodingClick}
+       className=' px-6 py-3 flex items-center justify-center rounded-xl border border-gray-400 cursor-pointer group hover:border-gray-200'>
         <p className=' text-gray-400 group-hover:text-gray-200 capitalize'>Start Coding</p>
       </div>
-      </Link>
+      
 
 
       {/* home nav */}
